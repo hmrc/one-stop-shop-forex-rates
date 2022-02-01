@@ -1,5 +1,6 @@
 import uk.gov.hmrc.DefaultBuildSettings.integrationTestSettings
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin.publishingSettings
+import scoverage.ScoverageKeys
 
 val appName = "one-stop-shop-forex-rates"
 
@@ -17,8 +18,12 @@ lazy val microservice = Project(appName, file("."))
     libraryDependencies ++= Seq(
       compilerPlugin("com.github.ghik" % "silencer-plugin" % silencerVersion cross CrossVersion.full),
       "com.github.ghik" % "silencer-lib" % silencerVersion % Provided cross CrossVersion.full
-    )
-    // ***************
+    ),
+    ScoverageKeys.coverageExcludedFiles := "<empty>;Reverse.*;" +
+      ".*Routes.*;" + ".*AppConfig.*;",
+    ScoverageKeys.coverageMinimumStmtTotal := 78,
+    ScoverageKeys.coverageFailOnMinimum := true,
+    ScoverageKeys.coverageHighlighting := true
   )
   .settings(publishingSettings: _*)
   .configs(IntegrationTest)
