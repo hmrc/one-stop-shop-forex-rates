@@ -20,7 +20,7 @@ lazy val microservice = Project(appName, file("."))
       "com.github.ghik" % "silencer-lib" % silencerVersion % Provided cross CrossVersion.full
     ),
     ScoverageKeys.coverageExcludedFiles := "<empty>;Reverse.*;" +
-      ".*Routes.*;",
+      ".*Routes.*;" + ".*AppConfig.*;",
     ScoverageKeys.coverageMinimumStmtTotal := 78,
     ScoverageKeys.coverageFailOnMinimum := true,
     ScoverageKeys.coverageHighlighting := true
