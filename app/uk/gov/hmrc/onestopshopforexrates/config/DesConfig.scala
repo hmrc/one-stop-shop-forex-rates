@@ -17,18 +17,26 @@
 package uk.gov.hmrc.onestopshopforexrates.config
 
 import play.api.Configuration
+import play.api.mvc.ResponseHeader.httpDateFormat
 
+import java.time.ZonedDateTime
+import java.util.UUID
 import javax.inject.Inject
 
 class DesConfig @Inject()(config: Configuration) {
 
-  val baseUrl: Service    = config.get[Service]("microservice.services.des")
+  val baseUrl: Service = config.get[Service]("microservice.services.des")
   val authorizationToken: String = config.get[String]("microservice.services.des.authorizationToken")
   val environment: String = config.get[String]("microservice.services.des.environment")
   val regimeType: String = config.get[String]("microservice.services.des.regimeType")
 
-  val desHeaders: Seq[(String, String)] = Seq(
+  def desHeaders(correlationId: UUID): Seq[(String, String)] = Seq(
     "Authorization" -> s"Bearer $authorizationToken",
-    "Environment" -> environment
+    "Environment" -> environment,
+    "Date" -> httpDateFormat.format(ZonedDateTime.now),
+    "X-Correlation-ID" -> correlationId.toString,
+    "Accept" -> "application/json",
+    "X-Forwarded-Host" -> "MDTP",
+    "Content-Type" -> "application/json"
   )
 }

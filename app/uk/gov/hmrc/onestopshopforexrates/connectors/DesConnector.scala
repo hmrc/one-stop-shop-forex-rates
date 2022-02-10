@@ -22,6 +22,7 @@ import uk.gov.hmrc.onestopshopforexrates.config.DesConfig
 import uk.gov.hmrc.onestopshopforexrates.connectors.ExchangeRateHttpParser._
 import uk.gov.hmrc.onestopshopforexrates.model.core.CoreExchangeRateRequest
 
+import java.util.UUID
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -29,8 +30,10 @@ class DesConnector @Inject()(
                               httpClient: HttpClient,
                               desConfig: DesConfig
                             )(implicit ec: ExecutionContext) extends Logging {
+
   private implicit val emptyHc: HeaderCarrier = HeaderCarrier()
-  private val headers: Seq[(String, String)] = desConfig.desHeaders
+  private[connectors] val acknowledgementReference: UUID = UUID.randomUUID()
+  private[connectors] val headers: Seq[(String, String)] = desConfig.desHeaders(acknowledgementReference)
 
   private def url = s"${desConfig.baseUrl}oss/referencedata/v1/exchangerate"
 

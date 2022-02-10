@@ -26,9 +26,9 @@ import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class ForexConnector @Inject()(
-                                 httpClient: HttpClient,
-                                 config: Configuration
-                               )(implicit ec: ExecutionContext) extends Logging {
+                                httpClient: HttpClient,
+                                config: Configuration
+                              )(implicit ec: ExecutionContext) extends Logging {
 
   private val baseUrl = config.get[Service]("microservice.services.forex-rates")
 

@@ -25,7 +25,10 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.onestopshopforexrates.base.SpecBase
 import uk.gov.hmrc.onestopshopforexrates.model.core.{CoreErrorResponse, CoreExchangeRateRequest, CoreRate}
 
-import java.time.{LocalDate, LocalDateTime}
+import java.time.format.DateTimeFormatter
+import java.time.{LocalDate, LocalDateTime, ZoneId}
+import java.util.Locale
+import scala.util.Try
 
 class DesConnectorSpec extends SpecBase with WireMockHelper {
 
@@ -51,6 +54,41 @@ class DesConnectorSpec extends SpecBase with WireMockHelper {
     timestamp = LocalDateTime.now,
     rates = Seq(CoreRate(LocalDate.now, rate))
   )
+
+  "headers" - {
+
+    "generate the correct Date header format required" in {
+      val dateFormat = DateTimeFormatter
+        .ofPattern("EEE, dd MMM yyyy HH:mm:ss z", Locale.ENGLISH)
+        .withZone(ZoneId.of("GMT"))
+
+      val connector = application.injector.instanceOf[DesConnector]
+
+      connector.headers.filter(item => item._1 == "Date").map { item =>
+        Try(dateFormat.parse(item._2)).isSuccess mustBe true
+      }
+    }
+
+    "generate the correct Correlation ID header required" in {
+      val connector = application.injector.instanceOf[DesConnector]
+      connector.headers must contain("X-Correlation-ID" -> connector.acknowledgementReference.toString)
+    }
+
+    "generate the correct Accept header required" in {
+      val connector = application.injector.instanceOf[DesConnector]
+      connector.headers must contain("Accept" -> "application/json")
+    }
+
+    "generate the correct X-Forwarded-Host header required" in {
+      val connector = application.injector.instanceOf[DesConnector]
+      connector.headers must contain("X-Forwarded-Host" -> "MDTP")
+    }
+
+    "generate the correct Content-Type header required" in {
+      val connector = application.injector.instanceOf[DesConnector]
+      connector.headers must contain("Content-Type" -> "application/json")
+    }
+  }
 
   "postRates" - {
 
@@ -110,4 +148,5 @@ class DesConnectorSpec extends SpecBase with WireMockHelper {
     }
   }
 }
+
 

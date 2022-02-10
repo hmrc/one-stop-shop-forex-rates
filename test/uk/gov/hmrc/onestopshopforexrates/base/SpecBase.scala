@@ -19,15 +19,22 @@ package uk.gov.hmrc.onestopshopforexrates.base
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
-import org.scalatest.{OptionValues, TryValues}
 import play.api.inject.guice.GuiceApplicationBuilder
+import org.scalatestplus.mockito.MockitoSugar
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 
-import java.time.{Clock, LocalDate, ZoneId}
+import java.time.{Clock, Instant, ZoneId}
+
 
 trait SpecBase extends AnyFreeSpec
   with Matchers
   with ScalaFutures
-  with IntegrationPatience {
+  with IntegrationPatience
+  with ScalaCheckPropertyChecks
+  with MockitoSugar {
+
+  val now = Instant.now
+  val stubClock = Clock.fixed(now, ZoneId.systemDefault())
 
   protected def applicationBuilder: GuiceApplicationBuilder =
     new GuiceApplicationBuilder()

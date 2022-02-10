@@ -16,22 +16,13 @@
 
 package uk.gov.hmrc.onestopshopforexrates.config
 
-import javax.inject.{Inject, Singleton}
-import play.api.Configuration
-import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
+import com.google.inject.AbstractModule
 
-@Singleton
-class AppConfig @Inject()
-(
-  config: Configuration,
-  servicesConfig: ServicesConfig
-) {
+import java.time.{Clock, ZoneOffset}
 
-  val authBaseUrl: String = servicesConfig.baseUrl("auth")
+class Module extends AbstractModule {
 
-  val auditingEnabled: Boolean = config.get[Boolean]("auditing.enabled")
-  val graphiteHost: String = config.get[String]("microservice.metrics.graphite.host")
-
-  val desConnectorMaxAttempts: Int = config.get[Int]("desConnectorMaxAttempts")
-
+  override def configure(): Unit = {
+    bind(classOf[Clock]).toInstance(Clock.systemDefaultZone.withZone(ZoneOffset.UTC))
+  }
 }
