@@ -41,7 +41,7 @@ class ExchangeRatesServiceSpec extends SpecBase with BeforeAndAfterEach {
   }
 
   "must retrieve exchange rate data from Forex Rates and send to Core" in {
-    when(mockForexConnector.getRates(any(), any(), any(), any())(any())) thenReturn Future.successful(Seq(exchangeRate))
+    when(mockForexConnector.getRates(any(), any(), any(), any())) thenReturn Future.successful(Seq(exchangeRate))
     when(mockDesConnector.postLast5DaysToCore(any())) thenReturn Future.successful(Right())
     when(mockAppConfig.desConnectorMaxAttempts) thenReturn maxAttempts
 
@@ -49,14 +49,14 @@ class ExchangeRatesServiceSpec extends SpecBase with BeforeAndAfterEach {
 
     result mustBe Right()
 
-    verify(mockForexConnector, times(1)).getRates(any[LocalDate], any[LocalDate], any[String], any[String])(any())
+    verify(mockForexConnector, times(1)).getRates(any[LocalDate], any[LocalDate], any[String], any[String])
     verify(mockDesConnector, times(1)).postLast5DaysToCore(any[CoreExchangeRateRequest])
   }
 
   "must retry sending exchange rate data to Core up to a maximum of 3 tries" in {
     val expectedResponse = CoreErrorResponse(timestamp, Some(UUID.randomUUID()), s"UNEXPECTED_400", "errorResponseJson")
 
-    when(mockForexConnector.getRates(any(), any(), any(), any())(any())) thenReturn Future.successful(Seq(exchangeRate))
+    when(mockForexConnector.getRates(any(), any(), any(), any())) thenReturn Future.successful(Seq(exchangeRate))
     when(mockDesConnector.postLast5DaysToCore(any())) thenReturn Future.successful(Left(expectedResponse))
     when(mockAppConfig.desConnectorMaxAttempts) thenReturn maxAttempts
 
@@ -64,7 +64,7 @@ class ExchangeRatesServiceSpec extends SpecBase with BeforeAndAfterEach {
 
     result mustBe Left(expectedResponse)
 
-    verify(mockForexConnector, times(1)).getRates(any[LocalDate], any[LocalDate], any[String], any[String])(any())
+    verify(mockForexConnector, times(1)).getRates(any[LocalDate], any[LocalDate], any[String], any[String])
     verify(mockDesConnector, times(maxAttempts)).postLast5DaysToCore(any())
   }
 }

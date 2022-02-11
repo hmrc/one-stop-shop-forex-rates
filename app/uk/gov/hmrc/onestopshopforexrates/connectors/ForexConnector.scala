@@ -32,7 +32,8 @@ class ForexConnector @Inject()(
 
   private val baseUrl = config.get[Service]("microservice.services.forex-rates")
 
-  def getRates(dateFrom: LocalDate, dateTo: LocalDate, baseCurrency: String, targetCurrency: String)(implicit hc: HeaderCarrier): Future[Seq[ExchangeRate]] =
+  def getRates(dateFrom: LocalDate, dateTo: LocalDate, baseCurrency: String, targetCurrency: String): Future[Seq[ExchangeRate]] = {
+    implicit val hc: HeaderCarrier = HeaderCarrier()
     httpClient.GET[Seq[ExchangeRate]](s"$baseUrl/rates/$dateFrom/$dateTo/$baseCurrency/$targetCurrency")
-
+  }
 }

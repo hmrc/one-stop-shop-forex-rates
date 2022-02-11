@@ -16,7 +16,6 @@
 
 package uk.gov.hmrc.onestopshopforexrates.services
 
-import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.onestopshopforexrates.config.AppConfig
 import uk.gov.hmrc.onestopshopforexrates.connectors.ExchangeRateHttpParser.ExchangeRateResponse
 import uk.gov.hmrc.onestopshopforexrates.connectors.{DesConnector, ForexConnector}
@@ -39,7 +38,7 @@ class ExchangeRatesService @Inject()(forexConnector: ForexConnector,
   private val targetCurrency = "GBP"
   private val timestamp = LocalDateTime.now(clock)
 
-  def retrieveAndSendToCore(implicit hc: HeaderCarrier): Future[ExchangeRateResponse] = {
+  def retrieveAndSendToCore(): Future[ExchangeRateResponse] = {
     val retrievedExchangeRateData = forexConnector.getRates(dateFrom, dateTo, baseCurrency, targetCurrency)
     retrievedExchangeRateData.flatMap {
       exchangeRates => {
