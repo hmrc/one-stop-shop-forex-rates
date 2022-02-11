@@ -16,11 +16,14 @@
 
 package uk.gov.hmrc.onestopshopforexrates.services
 
+import play.api.Logging
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.onestopshopforexrates.config.AppConfig
 import uk.gov.hmrc.onestopshopforexrates.connectors.ExchangeRateHttpParser.ExchangeRateResponse
 import uk.gov.hmrc.onestopshopforexrates.connectors.{DesConnector, ForexConnector}
 import uk.gov.hmrc.onestopshopforexrates.model.ExchangeRate
 import uk.gov.hmrc.onestopshopforexrates.model.core.{CoreExchangeRateRequest, CoreRate}
+import uk.gov.hmrc.onestopshopforexrates.scheduler.ScheduledService
 
 import java.time.{Clock, LocalDate, LocalDateTime}
 import javax.inject.Inject
@@ -30,13 +33,27 @@ class ExchangeRatesService @Inject()(forexConnector: ForexConnector,
                                      desConnector: DesConnector,
                                      clock: Clock,
                                      appConfig: AppConfig
-                                    )(implicit ec: ExecutionContext) {
+                                    )(implicit ec: ExecutionContext)  extends ScheduledService[Boolean] with Logging {
 
   private val dateTo = LocalDate.now(clock)
   private val dateFrom = dateTo.minusDays(4)
   private val baseCurrency = "EUR"
   private val targetCurrency = "GBP"
   private val timestamp = LocalDateTime.now(clock)
+  override val jobName: String = "RetrieveAndSendForexDataJob"
+
+  override def invoke(implicit ec: ExecutionContext): Future[Boolean] = {
+    logger.info(s"[$jobName Scheduled Job Started]")
+
+    retrieveAndSendToCore().map {
+      case Right(_) =>
+        logger.info(s"[$jobName ran successfully]")
+        true
+      case Left(error) =>
+        logger.error(s"[Error when running $jobName: ${error.errorMessage}]")
+        false
+    }
+  }
 
   def retrieveAndSendToCore(): Future[ExchangeRateResponse] = {
     val retrievedExchangeRateData = forexConnector.getRates(dateFrom, dateTo, baseCurrency, targetCurrency)
