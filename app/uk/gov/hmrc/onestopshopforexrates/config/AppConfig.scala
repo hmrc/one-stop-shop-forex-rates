@@ -34,9 +34,4 @@ class AppConfig @Inject()
 
   val desConnectorMaxAttempts: Int = config.get[Int]("desConnectorMaxAttempts")
 
-  val initialDelay: Int = config.get[Int]("features.forex-rates-scheduler.initial-delay")
-  val intervalMinutes: Int = config.get[Int]("features.forex-rates-scheduler.interval-minutes")
-  val hourToRun: Int = config.get[Int]("features.forex-rates-scheduler.hour-to-run")
-  val minuteToRun: Int = config.get[Int]("features.forex-rates-scheduler.minute-to-run")
-
 }
