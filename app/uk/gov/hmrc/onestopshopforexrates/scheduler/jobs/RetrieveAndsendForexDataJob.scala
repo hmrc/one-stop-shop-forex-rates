@@ -26,10 +26,11 @@ import uk.gov.hmrc.onestopshopforexrates.services.ExchangeRatesService
 
 import javax.inject.Inject
 
-class RetrieveAndSendForexDataJob @Inject()(val config: Configuration,
+trait RetrieveAndSendForexDataJob extends ScheduledJob
+class RetrieveAndSendForexDataJobImpl @Inject()(val config: Configuration,
                                            val service: ExchangeRatesService,
                                            val applicationLifecycle: ApplicationLifecycle
-                                          ) extends ScheduledJob {
+                                          ) extends RetrieveAndSendForexDataJob {
 
   val jobName: String           = "RetrieveAndSendForexDataJob"
   val actorSystem: ActorSystem  = ActorSystem(jobName)

@@ -34,4 +34,7 @@ class AppConfig @Inject()
 
   val desConnectorMaxAttempts: Int = config.get[Int]("desConnectorMaxAttempts")
 
+  def forexDataService(): String =
+    servicesConfig.baseUrl("forex-rates") + s"/forex-rates"
+
 }

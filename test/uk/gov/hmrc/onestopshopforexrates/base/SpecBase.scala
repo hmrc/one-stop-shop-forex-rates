@@ -20,8 +20,11 @@ import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.inject.bind
 import org.scalatestplus.mockito.MockitoSugar
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
+import uk.gov.hmrc.onestopshopforexrates.scheduler.jobs.RetrieveAndSendForexDataJob
+import uk.gov.hmrc.onestopshopforexrates.services.ExchangeRatesService
 
 import java.time.{Clock, Instant, ZoneId}
 
@@ -38,5 +41,8 @@ trait SpecBase extends AnyFreeSpec
 
   protected def applicationBuilder: GuiceApplicationBuilder =
     new GuiceApplicationBuilder()
-      .overrides()
+      .overrides(
+        bind[ExchangeRatesService].to[FakeExchangeRateService],
+        bind[RetrieveAndSendForexDataJob].to[FakeRetrieveAndSendForexDataJob]
+      )
 }

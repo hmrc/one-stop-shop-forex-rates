@@ -18,6 +18,7 @@ object AppDependencies {
     "org.scalatestplus"       %% "mockito-3-4"                % "3.2.10.0",
     "org.scalatestplus"       %% "scalacheck-1-15"            % "3.2.11.0",
     "org.scalatestplus.play"  %% "scalatestplus-play"         % "5.1.0",
+    "org.scalamock"           %% "scalamock"                  %  "5.1.0",
     "org.mockito"             %% "mockito-scala"              % "1.17.0",
     "com.github.tomakehurst"  %  "wiremock-standalone"        % "2.27.2"
   ).map(_ % "test, it")

@@ -29,11 +29,12 @@ import java.time.{Clock, LocalDate, LocalDateTime}
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class ExchangeRatesService @Inject()(forexConnector: ForexConnector,
+trait ExchangeRatesService extends ScheduledService[Boolean] with Logging
+class ExchangeRatesServiceImpl @Inject()(forexConnector: ForexConnector,
                                      desConnector: DesConnector,
                                      clock: Clock,
                                      appConfig: AppConfig
-                                    )(implicit ec: ExecutionContext)  extends ScheduledService[Boolean] with Logging {
+                                    )(implicit ec: ExecutionContext) extends ExchangeRatesService {
 
   private val dateTo = LocalDate.now(clock)
   private val dateFrom = dateTo.minusDays(4)

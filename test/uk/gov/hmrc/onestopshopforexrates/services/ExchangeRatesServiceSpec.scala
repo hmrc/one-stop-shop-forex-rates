@@ -21,7 +21,7 @@ class ExchangeRatesServiceSpec extends SpecBase with BeforeAndAfterEach {
   private val mockForexConnector = mock[ForexConnector]
   private val mockDesConnector = mock[DesConnector]
   private val mockAppConfig = mock[AppConfig]
-  private val exchangeRateService = new ExchangeRatesService(mockForexConnector, mockDesConnector, stubClock, mockAppConfig)
+  private val exchangeRateService = new ExchangeRatesServiceImpl(mockForexConnector, mockDesConnector, stubClock, mockAppConfig)
 
   implicit private lazy val hc: HeaderCarrier = HeaderCarrier()
 

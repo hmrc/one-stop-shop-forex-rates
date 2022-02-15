@@ -35,7 +35,7 @@ class DesConnector @Inject()(
   private[connectors] val acknowledgementReference: UUID = UUID.randomUUID()
   private[connectors] val headers: Seq[(String, String)] = desConfig.desHeaders(acknowledgementReference)
 
-  private def url = s"${desConfig.baseUrl}oss/referencedata/v1/exchangerate"
+  private def url = s"${desConfig.baseUrl}/oss/referencedata/v1/exchangerate"
 
   def postLast5DaysToCore(rates: CoreExchangeRateRequest): Future[ExchangeRateResponse] = {
     httpClient.POST[CoreExchangeRateRequest, ExchangeRateResponse](
