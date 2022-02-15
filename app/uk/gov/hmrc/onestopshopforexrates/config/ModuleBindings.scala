@@ -18,8 +18,8 @@ package uk.gov.hmrc.onestopshopforexrates.config
 
 import play.api.{Configuration, Environment}
 import play.api.inject.{Binding, Module}
-import uk.gov.hmrc.onestopshopforexrates.scheduler.jobs.RetrieveAndSendForexDataJob
-import uk.gov.hmrc.onestopshopforexrates.services.ExchangeRatesService
+import uk.gov.hmrc.onestopshopforexrates.scheduler.jobs.{RetrieveAndSendForexDataJob, RetrieveAndSendForexDataJobImpl}
+import uk.gov.hmrc.onestopshopforexrates.services.{ExchangeRatesService, ExchangeRatesServiceImpl}
 
 import java.time.{Clock, ZoneOffset}
 
@@ -27,7 +27,7 @@ class ModuleBindings extends Module {
 
   override def bindings(environment: Environment, configuration: Configuration): Seq[Binding[_]] = Seq(
     bind(classOf[Clock]).toInstance(Clock.systemDefaultZone.withZone(ZoneOffset.UTC)),
-    bind[ExchangeRatesService].toSelf.eagerly(),
-    bind[RetrieveAndSendForexDataJob].toSelf.eagerly()
+    bind[ExchangeRatesService].to[ExchangeRatesServiceImpl].eagerly(),
+    bind[RetrieveAndSendForexDataJob].to[RetrieveAndSendForexDataJobImpl].eagerly()
   )
 }
