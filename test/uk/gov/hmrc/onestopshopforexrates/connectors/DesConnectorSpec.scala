@@ -26,8 +26,8 @@ import uk.gov.hmrc.onestopshopforexrates.base.SpecBase
 import uk.gov.hmrc.onestopshopforexrates.model.core.{CoreErrorResponse, CoreExchangeRateRequest, CoreRate}
 
 import java.time.format.DateTimeFormatter
-import java.time.{LocalDate, LocalDateTime, ZoneId}
-import java.util.Locale
+import java.time.{Instant, LocalDate, LocalDateTime, ZoneId}
+import java.util.{Locale, UUID}
 import scala.util.Try
 
 class DesConnectorSpec extends SpecBase with WireMockHelper {
@@ -112,8 +112,15 @@ class DesConnectorSpec extends SpecBase with WireMockHelper {
     "must return BadRequest when invalid data sent to core" in {
 
       val url = "/one-stop-shop-returns-stub/oss/referencedata/v1/exchangerate"
-
-      val errorResponseJson = """{}"""
+      val uuid = UUID.randomUUID()
+      val timestamp = Instant.now(stubClock)
+      val errorResponseJson = s"""{
+                                |    "timestamp": "$timestamp",
+                                |    "transactionId": "$uuid",
+                                |    "error": "OSS_001",
+                                |    "errorMessage": "Invalid input"
+                                |}
+                                |""".stripMargin
 
       running(application) {
         val connector = application.injector.instanceOf[DesConnector]
@@ -122,7 +129,7 @@ class DesConnectorSpec extends SpecBase with WireMockHelper {
 
         val result = connector.postLast5DaysToCore(exchangeRateRequest).futureValue
 
-        val expectedResponse = CoreErrorResponse(result.left.get.timestamp, result.left.get.transactionId, s"UNEXPECTED_400", errorResponseJson)
+        val expectedResponse = CoreErrorResponse(timestamp, Some(uuid), "OSS_001", "Invalid input")
 
         result mustBe Left(expectedResponse)
       }
