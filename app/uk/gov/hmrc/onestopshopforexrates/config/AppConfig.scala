@@ -22,13 +22,19 @@ import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 @Singleton
 class AppConfig @Inject()
-  (
-    config: Configuration
-  , servicesConfig: ServicesConfig
-  ) {
+(
+  config: Configuration,
+  servicesConfig: ServicesConfig
+) {
 
   val authBaseUrl: String = servicesConfig.baseUrl("auth")
 
   val auditingEnabled: Boolean = config.get[Boolean]("auditing.enabled")
-  val graphiteHost: String     = config.get[String]("microservice.metrics.graphite.host")
+  val graphiteHost: String = config.get[String]("microservice.metrics.graphite.host")
+
+  val desConnectorMaxAttempts: Int = config.get[Int]("desConnectorMaxAttempts")
+
+  def forexDataService(): String =
+    servicesConfig.baseUrl("forex-rates") + s"/forex-rates"
+
 }

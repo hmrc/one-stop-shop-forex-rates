@@ -14,18 +14,11 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.onestopshopforexrates.controllers
+package uk.gov.hmrc.onestopshopforexrates.scheduler
 
-import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
-import play.api.mvc.{Action, AnyContent, ControllerComponents}
-import javax.inject.{Inject, Singleton}
-import scala.concurrent.Future
+import scala.concurrent.{Future, ExecutionContext => ExC}
 
-@Singleton()
-class MicroserviceHelloWorldController @Inject()(cc: ControllerComponents)
-    extends BackendController(cc) {
-
-  def hello(): Action[AnyContent] = Action.async { implicit request =>
-    Future.successful(Ok("Hello world"))
-  }
+trait ScheduledService[R] {
+  val jobName: String
+  def invoke(implicit ec : ExC) : Future[R]
 }

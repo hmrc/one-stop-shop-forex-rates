@@ -14,41 +14,37 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.onestopshopforexrates.model
+package uk.gov.hmrc.onestopshopforexrates.model.core
 
 import play.api.libs.json.{OFormat, OWrites, Reads, __}
 import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
 
-import java.time.{LocalDate, LocalDateTime}
+import java.time.LocalDate
 
-case class ExchangeRate(date: LocalDate, baseCurrency: String, targetCurrency: String, value: BigDecimal)
+case class CoreRate(publishedDate: LocalDate, rate: BigDecimal)
 
-object ExchangeRate {
+object CoreRate {
 
-  val reads: Reads[ExchangeRate] = {
-
-    import play.api.libs.functional.syntax._
-
-    (
-      (__ \ "date").read(MongoJavatimeFormats.localDateFormat) and
-        (__ \ "baseCurrency").read[String] and
-        (__ \ "targetCurrency").read[String] and
-        (__ \ "value").read[BigDecimal]
-      ) (ExchangeRate.apply _)
-  }
-
-  val writes: OWrites[ExchangeRate] = {
+   val reads: Reads[CoreRate] = {
 
     import play.api.libs.functional.syntax._
 
     (
-      (__ \ "date").write(MongoJavatimeFormats.localDateFormat) and
-        (__ \ "baseCurrency").write[String] and
-        (__ \ "targetCurrency").write[String] and
-        (__ \ "value").write[BigDecimal]
-      ) (unlift(ExchangeRate.unapply))
+      (__ \ "publishedDate").read(MongoJavatimeFormats.localDateFormat) and
+        (__ \ "rate").read[BigDecimal]
+      ) (CoreRate.apply _)
   }
 
-  implicit val format: OFormat[ExchangeRate] = OFormat(reads, writes)
+  val writes: OWrites[CoreRate] = {
+
+    import play.api.libs.functional.syntax._
+
+    (
+      (__ \ "publishedDate").write(MongoJavatimeFormats.localDateFormat) and
+        (__ \ "rate").write[BigDecimal]
+      ) (unlift(CoreRate.unapply))
+  }
+
+  implicit val format: OFormat[CoreRate] = OFormat(reads, writes)
 
 }
