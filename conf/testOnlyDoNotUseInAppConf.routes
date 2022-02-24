@@ -11,3 +11,4 @@
 
 # Add all the application routes to the prod.routes file
 ->         /                          prod.Routes
+GET        /one-stop-shop-forex-rates/test-only/retrieve-and-send        uk.gov.hmrc.onestopshopforexrates.controllers.test.TestOnlyController.retrieveRates()
