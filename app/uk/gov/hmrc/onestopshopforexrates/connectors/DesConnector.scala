@@ -18,7 +18,7 @@ package uk.gov.hmrc.onestopshopforexrates.connectors
 
 import play.api.Logging
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
-import uk.gov.hmrc.onestopshopforexrates.config.DesConfig
+import uk.gov.hmrc.onestopshopforexrates.config.IfConfig
 import uk.gov.hmrc.onestopshopforexrates.connectors.ExchangeRateHttpParser._
 import uk.gov.hmrc.onestopshopforexrates.model.core.CoreExchangeRateRequest
 
@@ -28,7 +28,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class DesConnector @Inject()(
                               httpClient: HttpClient,
-                              desConfig: DesConfig
+                              desConfig: IfConfig
                             )(implicit ec: ExecutionContext) extends Logging {
 
   private implicit val emptyHc: HeaderCarrier = HeaderCarrier()

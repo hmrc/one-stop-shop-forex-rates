@@ -23,12 +23,12 @@ import java.time.ZonedDateTime
 import java.util.UUID
 import javax.inject.Inject
 
-class DesConfig @Inject()(config: Configuration) {
+class IfConfig @Inject()(config: Configuration) {
 
-  val baseUrl: Service = config.get[Service]("microservice.services.des")
-  val authorizationToken: String = config.get[String]("microservice.services.des.authorizationToken")
-  val environment: String = config.get[String]("microservice.services.des.environment")
-  val regimeType: String = config.get[String]("microservice.services.des.regimeType")
+  val baseUrl: Service = config.get[Service]("microservice.services.if")
+  val authorizationToken: String = config.get[String]("microservice.services.if.authorizationToken")
+  val environment: String = config.get[String]("microservice.services.if.environment")
+  val regimeType: String = config.get[String]("microservice.services.if.regimeType")
 
   def desHeaders(correlationId: UUID): Seq[(String, String)] = Seq(
     "Authorization" -> s"Bearer $authorizationToken",
