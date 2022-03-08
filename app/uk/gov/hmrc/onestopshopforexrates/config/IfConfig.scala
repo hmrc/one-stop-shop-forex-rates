@@ -28,7 +28,6 @@ class IfConfig @Inject()(config: Configuration) {
   val baseUrl: Service = config.get[Service]("microservice.services.if")
   val authorizationToken: String = config.get[String]("microservice.services.if.authorizationToken")
   val environment: String = config.get[String]("microservice.services.if.environment")
-  val regimeType: String = config.get[String]("microservice.services.if.regimeType")
 
   def desHeaders(correlationId: UUID): Seq[(String, String)] = Seq(
     "Authorization" -> s"Bearer $authorizationToken",
