@@ -26,7 +26,7 @@ import uk.gov.hmrc.onestopshopforexrates.base.SpecBase
 import uk.gov.hmrc.onestopshopforexrates.model.core.{CoreErrorResponse, CoreExchangeRateRequest, CoreRate}
 
 import java.time.format.DateTimeFormatter
-import java.time.{Instant, LocalDate, LocalDateTime, ZoneId}
+import java.time.{Instant, LocalDate, ZoneId}
 import java.util.{Locale, UUID}
 import scala.util.Try
 
@@ -51,8 +51,8 @@ class DesConnectorSpec extends SpecBase with WireMockHelper {
   val exchangeRateRequest: CoreExchangeRateRequest = CoreExchangeRateRequest(
     base = baseCurrency,
     target = targetCurrency,
-    timestamp = LocalDateTime.now,
-    rates = Seq(CoreRate(LocalDate.now, rate))
+    timestamp = Instant.now,
+    rates = Seq(CoreRate(LocalDate.now(), rate))
   )
 
   "headers" - {

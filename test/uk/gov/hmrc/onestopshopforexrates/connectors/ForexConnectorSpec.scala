@@ -16,12 +16,12 @@
 
 package uk.gov.hmrc.onestopshopforexrates.connectors
 
-import uk.gov.hmrc.onestopshopforexrates.base.SpecBase
 import com.github.tomakehurst.wiremock.client.WireMock.{get, ok, urlEqualTo}
 import play.api.Application
 import play.api.libs.json.Json
 import play.api.test.Helpers.running
 import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.onestopshopforexrates.base.SpecBase
 import uk.gov.hmrc.onestopshopforexrates.model.ExchangeRate
 
 import java.time.LocalDate

@@ -25,7 +25,7 @@ import uk.gov.hmrc.onestopshopforexrates.model.ExchangeRate
 import uk.gov.hmrc.onestopshopforexrates.model.core.{CoreExchangeRateRequest, CoreRate}
 import uk.gov.hmrc.onestopshopforexrates.scheduler.ScheduledService
 
-import java.time.{Clock, LocalDate, LocalDateTime}
+import java.time.{Clock, LocalDate, LocalDateTime, ZoneOffset}
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -40,7 +40,7 @@ class ExchangeRatesServiceImpl @Inject()(forexConnector: ForexConnector,
   private val dateFrom = dateTo.minusDays(4)
   private val baseCurrency = "EUR"
   private val targetCurrency = "GBP"
-  private val timestamp = LocalDateTime.now(clock)
+  private val timestamp = LocalDateTime.now(clock).toInstant(ZoneOffset.of("Z"))
   override val jobName: String = "RetrieveAndSendForexDataJob"
 
   override def invoke(implicit ec: ExecutionContext): Future[Boolean] = {
