@@ -34,6 +34,6 @@ class ForexConnector @Inject()(
 
   def getRates(dateFrom: LocalDate, dateTo: LocalDate, baseCurrency: String, targetCurrency: String): Future[Seq[ExchangeRate]] = {
     implicit val hc: HeaderCarrier = HeaderCarrier()
-    httpClient.GET[Seq[ExchangeRate]](s"$baseUrl/rates/$dateFrom/$dateTo/$baseCurrency/$targetCurrency")
+    httpClient.GET[Seq[ExchangeRate]](s"${baseUrl}rates/$dateFrom/$dateTo/$baseCurrency/$targetCurrency")
   }
 }

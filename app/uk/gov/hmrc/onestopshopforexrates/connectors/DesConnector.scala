@@ -28,14 +28,14 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class DesConnector @Inject()(
                               httpClient: HttpClient,
-                              desConfig: IfConfig
+                              ifConfig: IfConfig
                             )(implicit ec: ExecutionContext) extends Logging {
 
   private implicit val emptyHc: HeaderCarrier = HeaderCarrier()
   private[connectors] val acknowledgementReference: UUID = UUID.randomUUID()
-  private[connectors] val headers: Seq[(String, String)] = desConfig.desHeaders(acknowledgementReference)
+  private[connectors] val headers: Seq[(String, String)] = ifConfig.ifHeaders(acknowledgementReference)
 
-  private def url = s"${desConfig.baseUrl}/oss/referencedata/v1/exchangerate"
+  private def url = s"${ifConfig.baseUrl}oss/referencedata/v1/exchangerate"
 
   def postLast5DaysToCore(rates: CoreExchangeRateRequest): Future[ExchangeRateResponse] = {
     httpClient.POST[CoreExchangeRateRequest, ExchangeRateResponse](

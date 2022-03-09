@@ -38,8 +38,8 @@ class ExchangeRatesServiceImpl @Inject()(forexConnector: ForexConnector,
 
   private val dateTo = LocalDate.now(clock)
   private val dateFrom = dateTo.minusDays(4)
-  private val baseCurrency = "EUR"
-  private val targetCurrency = "GBP"
+  private val baseCurrency = "GBP"
+  private val targetCurrency = "EUR"
   private val timestamp = LocalDateTime.now(clock)
   override val jobName: String = "RetrieveAndSendForexDataJob"
 
@@ -53,6 +53,10 @@ class ExchangeRatesServiceImpl @Inject()(forexConnector: ForexConnector,
       case Left(error) =>
         logger.error(s"[Error when running $jobName: ${error.errorMessage}]")
         false
+    }.recover {
+      case e: Exception =>
+        logger.error(s"[$jobName] Error occurred during retrieve and send to core: ${e.getMessage}", e)
+        throw e
     }
   }
 
@@ -76,14 +80,16 @@ class ExchangeRatesServiceImpl @Inject()(forexConnector: ForexConnector,
 
   private def retrySendingRates(count: Int, coreRequest: CoreExchangeRateRequest): Future[ExchangeRateResponse] = {
     desConnector.postLast5DaysToCore(coreRequest).flatMap {
-      response =>
-        response match {
-          case Right(_) =>
-            Future.successful(response)
-          case Left(_) =>
-            if (count > 1) retrySendingRates(count - 1, coreRequest)
-            else Future.successful(response)
-        }
+      case response@Right(_) =>
+        Future.successful(response)
+      case response@Left(_) =>
+        if (count > 1) retrySendingRates(count - 1, coreRequest)
+        else Future.successful(response)
+    }.recoverWith {
+      case e: Exception =>
+        logger.error(s"General error occurred ${e.getMessage}")
+        if (count > 1) retrySendingRates(count - 1, coreRequest)
+        else throw e
     }
   }
 }

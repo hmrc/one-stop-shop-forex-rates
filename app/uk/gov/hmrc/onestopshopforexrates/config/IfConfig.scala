@@ -29,7 +29,7 @@ class IfConfig @Inject()(config: Configuration) {
   val authorizationToken: String = config.get[String]("microservice.services.if.authorizationToken")
   val environment: String = config.get[String]("microservice.services.if.environment")
 
-  def desHeaders(correlationId: UUID): Seq[(String, String)] = Seq(
+  def ifHeaders(correlationId: UUID): Seq[(String, String)] = Seq(
     "Authorization" -> s"Bearer $authorizationToken",
     "Environment" -> environment,
     "Date" -> httpDateFormat.format(ZonedDateTime.now),
