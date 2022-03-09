@@ -52,7 +52,7 @@ class DesConnectorSpec extends SpecBase with WireMockHelper {
     base = baseCurrency,
     target = targetCurrency,
     timestamp = LocalDateTime.now,
-    rates = Seq(CoreRate(LocalDate.now, rate))
+    rates = Seq(CoreRate(LocalDate.now(), rate))
   )
 
   "headers" - {

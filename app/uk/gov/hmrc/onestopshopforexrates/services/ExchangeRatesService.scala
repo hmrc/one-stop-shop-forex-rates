@@ -25,7 +25,7 @@ import uk.gov.hmrc.onestopshopforexrates.model.ExchangeRate
 import uk.gov.hmrc.onestopshopforexrates.model.core.{CoreExchangeRateRequest, CoreRate}
 import uk.gov.hmrc.onestopshopforexrates.scheduler.ScheduledService
 
-import java.time.{Clock, LocalDate, LocalDateTime}
+import java.time.{Clock, LocalDate, LocalDateTime, ZoneOffset}
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 

@@ -30,7 +30,7 @@ object ExchangeRate {
     import play.api.libs.functional.syntax._
 
     (
-      (__ \ "date").read(MongoJavatimeFormats.localDateFormat) and
+      (__ \ "date").read[LocalDate] and
         (__ \ "baseCurrency").read[String] and
         (__ \ "targetCurrency").read[String] and
         (__ \ "value").read[BigDecimal]
@@ -42,7 +42,7 @@ object ExchangeRate {
     import play.api.libs.functional.syntax._
 
     (
-      (__ \ "date").write(MongoJavatimeFormats.localDateFormat) and
+      (__ \ "date").write[LocalDate] and
         (__ \ "baseCurrency").write[String] and
         (__ \ "targetCurrency").write[String] and
         (__ \ "value").write[BigDecimal]

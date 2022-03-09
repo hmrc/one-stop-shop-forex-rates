@@ -30,7 +30,7 @@ object CoreRate {
     import play.api.libs.functional.syntax._
 
     (
-      (__ \ "publishedDate").read(MongoJavatimeFormats.localDateFormat) and
+      (__ \ "publishedDate").read[LocalDate] and
         (__ \ "rate").read[BigDecimal]
       ) (CoreRate.apply _)
   }
@@ -40,7 +40,7 @@ object CoreRate {
     import play.api.libs.functional.syntax._
 
     (
-      (__ \ "publishedDate").write(MongoJavatimeFormats.localDateFormat) and
+      (__ \ "publishedDate").write[LocalDate] and
         (__ \ "rate").write[BigDecimal]
       ) (unlift(CoreRate.unapply))
   }
