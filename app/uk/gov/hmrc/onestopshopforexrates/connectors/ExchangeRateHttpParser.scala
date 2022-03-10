@@ -34,6 +34,7 @@ object ExchangeRateHttpParser extends Logging {
         case OK =>
           Right()
         case status =>
+          logger.error(s"Recieved status code back $status with body [${response.body}]")
           response.json.validate[CoreErrorResponse] match {
             case JsSuccess(value, _) =>
               logger.error(s"Error response from core $url, received status $status, body of response was: ${response.body}")

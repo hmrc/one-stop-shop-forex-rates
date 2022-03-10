@@ -87,7 +87,7 @@ class ExchangeRatesServiceImpl @Inject()(forexConnector: ForexConnector,
         else Future.successful(response)
     }.recoverWith {
       case e: Exception =>
-        logger.error(s"General error occurred ${e.getMessage}")
+        logger.error(s"General error occurred ${e.getMessage}", e)
         if (count > 1) retrySendingRates(count - 1, coreRequest)
         else throw e
     }
