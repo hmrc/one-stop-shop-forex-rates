@@ -17,6 +17,7 @@
 package uk.gov.hmrc.onestopshopforexrates.connectors
 
 import play.api.Logging
+import play.api.http.HeaderNames.AUTHORIZATION
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import uk.gov.hmrc.onestopshopforexrates.config.IfConfig
 import uk.gov.hmrc.onestopshopforexrates.connectors.ExchangeRateHttpParser._
@@ -38,6 +39,12 @@ class DesConnector @Inject()(
   private def url = s"${ifConfig.baseUrl}oss/referencedata/v1/exchangerate"
 
   def postLast5DaysToCore(rates: CoreExchangeRateRequest): Future[ExchangeRateResponse] = {
+    val headersWithoutAuth = headers.filterNot{
+      case (key, _) => key.matches(AUTHORIZATION)
+    }
+
+    logger.info(s"Sending exchange rate request to core with headers $headersWithoutAuth")
+
     httpClient.POST[CoreExchangeRateRequest, ExchangeRateResponse](
       url,
       rates,
