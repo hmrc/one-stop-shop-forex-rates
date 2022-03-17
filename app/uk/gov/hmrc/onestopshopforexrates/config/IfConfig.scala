@@ -31,7 +31,6 @@ class IfConfig @Inject()(config: Configuration, clock: Clock) {
 
   def ifHeaders(correlationId: UUID): Seq[(String, String)] = Seq(
     "Authorization" -> s"Bearer $authorizationToken",
-    "Environment" -> environment,
     "Date" -> httpDateFormat.format(LocalDateTime.now(clock)),
     "X-Correlation-ID" -> correlationId.toString,
     "Accept" -> "application/json",
