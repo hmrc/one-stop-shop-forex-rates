@@ -34,14 +34,19 @@ object ExchangeRateHttpParser extends Logging {
         case OK =>
           Right()
         case status =>
-          logger.error(s"Recieved status code back $status with body [${response.body}]")
-          response.json.validate[CoreErrorResponse] match {
-            case JsSuccess(value, _) =>
-              logger.error(s"Error response from core $url, received status $status, body of response was: ${response.body}")
-              Left(value)
-            case _ =>
-              logger.error(s"Unexpected error response from core $url, received status $status, body of response was: ${response.body}")
-              Left(CoreErrorResponse(Instant.now(), None, s"UNEXPECTED_$status", response.body))
+          if(response.body.isEmpty){
+            logger.error(s"Recieved status code back $status with empty response body")
+            Left(CoreErrorResponse(Instant.now(), None, s"UNEXPECTED_$status", "Response body was empty"))
+          } else {
+            logger.error(s"Recieved status code back $status with body [${response.body}]")
+            response.json.validateOpt[CoreErrorResponse] match {
+              case JsSuccess(Some(value), _) =>
+                logger.error(s"Error response from core $url, received status $status, body of response was: ${response.body}")
+                Left(value)
+              case _ =>
+                logger.error(s"Unexpected error response from core $url, received status $status, body of response was: ${response.body}")
+                Left(CoreErrorResponse(Instant.now(), None, s"UNEXPECTED_$status", response.body))
+            }
           }
       }
   }

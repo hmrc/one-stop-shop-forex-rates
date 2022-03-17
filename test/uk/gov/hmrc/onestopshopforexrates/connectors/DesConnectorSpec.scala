@@ -18,7 +18,7 @@ package uk.gov.hmrc.onestopshopforexrates.connectors
 
 import com.github.tomakehurst.wiremock.client.WireMock._
 import play.api.Application
-import play.api.http.Status.CONFLICT
+import play.api.http.Status.{BAD_REQUEST, CONFLICT}
 import play.api.libs.json.Json
 import play.api.test.Helpers.running
 import uk.gov.hmrc.http.HeaderCarrier
@@ -93,7 +93,7 @@ class DesConnectorSpec extends SpecBase with WireMockHelper {
   "postRates" - {
     val url = "/one-stop-shop-returns-stub/vec/ecbexchangerate/ecbexchangeraterequest/v1"
 
-    "must return OK when rates are successfully sent to core" in {
+    "must return Right() when rates are successfully sent to core" in {
 
       running(application) {
         val connector = application.injector.instanceOf[DesConnector]
@@ -108,7 +108,20 @@ class DesConnectorSpec extends SpecBase with WireMockHelper {
       }
     }
 
-    "must return BadRequest when invalid data sent to core" in {
+    "must return Left(CoreErrorResponse) when core responds with an error without a response body" in {
+
+      running(application) {
+        val connector = application.injector.instanceOf[DesConnector]
+        server.stubFor(post(urlEqualTo(url)).willReturn(badRequest()))
+
+        val result = connector.postLast5DaysToCore(exchangeRateRequest).futureValue
+        val expectedResponse = CoreErrorResponse(result.left.get.timestamp, None, s"UNEXPECTED_$BAD_REQUEST", "Response body was empty")
+
+        result mustBe Left(expectedResponse)
+      }
+    }
+
+    "must return Left(CoreErrorResponse) with code 001 when invalid data sent to core" in {
 
       val uuid = UUID.randomUUID()
       val timestamp = Instant.now(stubClock)
@@ -133,7 +146,7 @@ class DesConnectorSpec extends SpecBase with WireMockHelper {
       }
     }
 
-    "must return Conflict Found when data is already present in core" in {
+    "must return Left(CoreErrorResponse) with code 409 when data is already present in core" in {
 
       val errorResponseJson = """{}"""
 
