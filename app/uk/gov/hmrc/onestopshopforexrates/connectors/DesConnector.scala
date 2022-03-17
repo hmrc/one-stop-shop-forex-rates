@@ -36,7 +36,7 @@ class DesConnector @Inject()(
   private[connectors] val acknowledgementReference: UUID = UUID.randomUUID()
   private[connectors] val headers: Seq[(String, String)] = ifConfig.ifHeaders(acknowledgementReference)
 
-  private def url = s"${ifConfig.baseUrl}oss/referencedata/v1/exchangerate"
+  private def url = s"${ifConfig.baseUrl}vec/ecbexchangerate/ecbexchangeraterequest/v1"
 
   def postLast5DaysToCore(rates: CoreExchangeRateRequest): Future[ExchangeRateResponse] = {
     val headersWithoutAuth = headers.filterNot{

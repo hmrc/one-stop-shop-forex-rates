@@ -19,11 +19,11 @@ package uk.gov.hmrc.onestopshopforexrates.config
 import play.api.Configuration
 import play.api.mvc.ResponseHeader.httpDateFormat
 
-import java.time.ZonedDateTime
+import java.time.{Clock, LocalDateTime, ZonedDateTime}
 import java.util.UUID
 import javax.inject.Inject
 
-class IfConfig @Inject()(config: Configuration) {
+class IfConfig @Inject()(config: Configuration, clock: Clock) {
 
   val baseUrl: Service = config.get[Service]("microservice.services.if")
   val authorizationToken: String = config.get[String]("microservice.services.if.authorizationToken")
@@ -32,7 +32,7 @@ class IfConfig @Inject()(config: Configuration) {
   def ifHeaders(correlationId: UUID): Seq[(String, String)] = Seq(
     "Authorization" -> s"Bearer $authorizationToken",
     "Environment" -> environment,
-    "Date" -> httpDateFormat.format(ZonedDateTime.now),
+    "Date" -> httpDateFormat.format(LocalDateTime.now(clock)),
     "X-Correlation-ID" -> correlationId.toString,
     "Accept" -> "application/json",
     "X-Forwarded-Host" -> "MDTP",
