@@ -91,10 +91,9 @@ class DesConnectorSpec extends SpecBase with WireMockHelper {
   }
 
   "postRates" - {
+    val url = "/one-stop-shop-returns-stub/vec/ecbexchangerate/ecbexchangeraterequest/v1"
 
     "must return OK when rates are successfully sent to core" in {
-
-      val url = "/one-stop-shop-returns-stub/oss/referencedata/v1/exchangerate"
 
       running(application) {
         val connector = application.injector.instanceOf[DesConnector]
@@ -111,7 +110,6 @@ class DesConnectorSpec extends SpecBase with WireMockHelper {
 
     "must return BadRequest when invalid data sent to core" in {
 
-      val url = "/one-stop-shop-returns-stub/oss/referencedata/v1/exchangerate"
       val uuid = UUID.randomUUID()
       val timestamp = Instant.now(stubClock)
       val errorResponseJson = s"""{
@@ -136,8 +134,6 @@ class DesConnectorSpec extends SpecBase with WireMockHelper {
     }
 
     "must return Conflict Found when data is already present in core" in {
-
-      val url = "/one-stop-shop-returns-stub/oss/referencedata/v1/exchangerate"
 
       val errorResponseJson = """{}"""
 
