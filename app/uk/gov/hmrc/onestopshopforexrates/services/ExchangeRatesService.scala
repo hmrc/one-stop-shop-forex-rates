@@ -17,6 +17,7 @@
 package uk.gov.hmrc.onestopshopforexrates.services
 
 import play.api.Logging
+import play.api.libs.json.Json
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.onestopshopforexrates.config.AppConfig
 import uk.gov.hmrc.onestopshopforexrates.connectors.ExchangeRateHttpParser.ExchangeRateResponse
@@ -83,6 +84,7 @@ class ExchangeRatesServiceImpl @Inject()(forexConnector: ForexConnector,
       case response@Right(_) =>
         Future.successful(response)
       case response@Left(_) =>
+        logger.error(s"Received failure when sending exchange rate to core status: [${response.value}]. Request was: [${Json.toJson(coreRequest)}]")
         if (count > 1) retrySendingRates(count - 1, coreRequest)
         else Future.successful(response)
     }.recoverWith {
