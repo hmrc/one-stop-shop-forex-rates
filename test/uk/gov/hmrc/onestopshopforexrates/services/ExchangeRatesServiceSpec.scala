@@ -2,7 +2,7 @@ package uk.gov.hmrc.onestopshopforexrates.services
 
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito
-import org.mockito.Mockito.{times, verify, when}
+import org.mockito.Mockito.{times, verify, verifyNoInteractions, when}
 import org.scalatest.BeforeAndAfterEach
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.onestopshopforexrates.base.SpecBase
@@ -51,6 +51,17 @@ class ExchangeRatesServiceSpec extends SpecBase with BeforeAndAfterEach {
 
     verify(mockForexConnector, times(1)).getRates(any[LocalDate], any[LocalDate], any[String], any[String])
     verify(mockDesConnector, times(1)).postLast5DaysToCore(any[CoreExchangeRateRequest])
+  }
+
+  "must not send to Core when there are no Forex exchange rates retrieved" in {
+    when(mockForexConnector.getRates(any(), any(), any(), any())) thenReturn Future.successful(Seq.empty)
+
+    val result = exchangeRateService.retrieveAndSendToCore.futureValue
+
+    result mustBe Right()
+
+    verify(mockForexConnector, times(1)).getRates(any[LocalDate], any[LocalDate], any[String], any[String])
+    verifyNoInteractions(mockDesConnector)
   }
 
   "must retry sending exchange rate data to Core up to a maximum of 3 tries" in {
