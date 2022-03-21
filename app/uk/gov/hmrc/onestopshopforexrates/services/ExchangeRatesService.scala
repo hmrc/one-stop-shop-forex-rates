@@ -18,7 +18,6 @@ package uk.gov.hmrc.onestopshopforexrates.services
 
 import play.api.Logging
 import play.api.libs.json.Json
-import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.onestopshopforexrates.config.AppConfig
 import uk.gov.hmrc.onestopshopforexrates.connectors.ExchangeRateHttpParser.ExchangeRateResponse
 import uk.gov.hmrc.onestopshopforexrates.connectors.{DesConnector, ForexConnector}
@@ -26,7 +25,7 @@ import uk.gov.hmrc.onestopshopforexrates.model.ExchangeRate
 import uk.gov.hmrc.onestopshopforexrates.model.core.{CoreExchangeRateRequest, CoreRate}
 import uk.gov.hmrc.onestopshopforexrates.scheduler.ScheduledService
 
-import java.time.{Clock, LocalDate, LocalDateTime, ZoneOffset}
+import java.time.{Clock, LocalDate, LocalDateTime}
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -64,7 +63,10 @@ class ExchangeRatesServiceImpl @Inject()(forexConnector: ForexConnector,
   def retrieveAndSendToCore(): Future[ExchangeRateResponse] = {
     val retrievedExchangeRateData = forexConnector.getRates(dateFrom, dateTo, baseCurrency, targetCurrency)
     retrievedExchangeRateData.flatMap {
-      exchangeRates => {
+      exchangeRates => if(exchangeRates.isEmpty) {
+        logger.warn("There were no rates retrieved")
+        Future.successful(Right())
+      } else {
         val exchangeRateRequest = exchangeRateToExchangeRateRequest(exchangeRates)
         retrySendingRates(appConfig.desConnectorMaxAttempts, exchangeRateRequest)
       }
