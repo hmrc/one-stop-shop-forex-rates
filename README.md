@@ -25,10 +25,15 @@ and
 sbt 'run 10199'
 ```
 
-### To use the test only endpoints:
+### To use the test-only endpoints:
 ```
 sbt run -Dapplication.router=testOnlyDoNotUseInAppConf.Routes
 ```
+The test-only endpoint triggers the retrieval of exchange rates from forex-rates API and posting them to Core.
+
+|Method |URI                                                    |
+|:-----:|-------------------------------------------------------|
+|GET    |/one-stop-shop-forex-rates/test-only/retrieve-and-send |
 
 Unit and Integration Tests
 ------------
