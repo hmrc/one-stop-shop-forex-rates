@@ -18,6 +18,7 @@ package uk.gov.hmrc.onestopshopforexrates.connectors
 
 import play.api.Logging
 import play.api.http.HeaderNames.AUTHORIZATION
+import play.api.libs.json.Json
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import uk.gov.hmrc.onestopshopforexrates.config.IfConfig
 import uk.gov.hmrc.onestopshopforexrates.connectors.ExchangeRateHttpParser._
@@ -43,7 +44,7 @@ class DesConnector @Inject()(
       case (key, _) => key.matches(AUTHORIZATION)
     }
 
-    logger.info(s"Sending exchange rate request to core with headers $headersWithoutAuth")
+    logger.info(s"Sending exchange rate request to core with headers $headersWithoutAuth with body [${Json.toJson(rates)}]")
 
     httpClient.POST[CoreExchangeRateRequest, ExchangeRateResponse](
       url,
