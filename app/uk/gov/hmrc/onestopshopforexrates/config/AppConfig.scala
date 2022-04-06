@@ -36,5 +36,8 @@ class AppConfig @Inject()
 
   def forexDataService(): String =
     servicesConfig.baseUrl("forex-rates") + s"/forex-rates"
+    
+  val baseCurrency: String = config.get[String]("baseCurrency")
+  val targetCurrency: String = config.get[String]("targetCurrency")
 
 }
