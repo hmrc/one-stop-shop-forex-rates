@@ -34,13 +34,15 @@ class DesConnector @Inject()(
                             )(implicit ec: ExecutionContext) extends Logging {
 
   private implicit val emptyHc: HeaderCarrier = HeaderCarrier()
-  private[connectors] val acknowledgementReference: UUID = UUID.randomUUID()
-  private[connectors] val headers: Seq[(String, String)] = ifConfig.ifHeaders(acknowledgementReference)
+  private[connectors] def headers(correctionId: UUID): Seq[(String, String)] = ifConfig.ifHeaders(correctionId)
 
   private def url = s"${ifConfig.baseUrl}vec/ecbexchangerate/ecbexchangeraterequest/v1"
 
   def postLast5DaysToCore(rates: CoreExchangeRateRequest): Future[ExchangeRateResponse] = {
-    val headersWithoutAuth = headers.filterNot{
+    val correlationId = UUID.randomUUID()
+    val headersWithCorrelationId = headers(correlationId)
+
+    val headersWithoutAuth = headersWithCorrelationId.filterNot{
       case (key, _) => key.matches(AUTHORIZATION)
     }
 
@@ -49,7 +51,7 @@ class DesConnector @Inject()(
     httpClient.POST[CoreExchangeRateRequest, ExchangeRateResponse](
       url,
       rates,
-      headers = headers
+      headers = headersWithCorrelationId
     )
   }
 
