@@ -38,8 +38,8 @@ class ExchangeRatesServiceImpl @Inject()(forexConnector: ForexConnector,
 
   private val dateTo = LocalDate.now(clock)
   private val dateFrom = dateTo.minusDays(4)
-  private val baseCurrency = "GBP"
-  private val targetCurrency = "EUR"
+  private val baseCurrency = appConfig.baseCurrency
+  private val targetCurrency = appConfig.targetCurrency
   private val timestamp = LocalDateTime.now(clock)
   override val jobName: String = "RetrieveAndSendForexDataJob"
 
