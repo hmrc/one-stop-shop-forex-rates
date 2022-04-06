@@ -44,16 +44,18 @@ class DesConnectorSpec extends SpecBase with WireMockHelper {
       )
       .build()
 
-  val baseCurrency = "EUR"
-  val targetCurrency = "GBP"
-  val rate = BigDecimal(500)
+  private val baseCurrency = "EUR"
+  private val targetCurrency = "GBP"
+  private val rate = BigDecimal(500)
 
-  val exchangeRateRequest: CoreExchangeRateRequest = CoreExchangeRateRequest(
+  private val exchangeRateRequest: CoreExchangeRateRequest = CoreExchangeRateRequest(
     base = baseCurrency,
     target = targetCurrency,
     timestamp = LocalDateTime.now,
     rates = Seq(CoreRate(LocalDate.now(), rate))
   )
+
+  private val correlationId = UUID.randomUUID()
 
   "headers" - {
 
@@ -64,29 +66,29 @@ class DesConnectorSpec extends SpecBase with WireMockHelper {
 
       val connector = application.injector.instanceOf[DesConnector]
 
-      connector.headers.filter(item => item._1 == "Date").map { item =>
+      connector.headers(correlationId).filter(item => item._1 == "Date").map { item =>
         Try(dateFormat.parse(item._2)).isSuccess mustBe true
       }
     }
 
     "generate the correct Correlation ID header required" in {
       val connector = application.injector.instanceOf[DesConnector]
-      connector.headers must contain("X-Correlation-ID" -> connector.acknowledgementReference.toString)
+      connector.headers(correlationId) must contain("X-Correlation-ID" -> correlationId.toString)
     }
 
     "generate the correct Accept header required" in {
       val connector = application.injector.instanceOf[DesConnector]
-      connector.headers must contain("Accept" -> "application/json")
+      connector.headers(correlationId) must contain("Accept" -> "application/json")
     }
 
     "generate the correct X-Forwarded-Host header required" in {
       val connector = application.injector.instanceOf[DesConnector]
-      connector.headers must contain("X-Forwarded-Host" -> "MDTP")
+      connector.headers(correlationId) must contain("X-Forwarded-Host" -> "MDTP")
     }
 
     "generate the correct Content-Type header required" in {
       val connector = application.injector.instanceOf[DesConnector]
-      connector.headers must contain("Content-Type" -> "application/json")
+      connector.headers(correlationId) must contain("Content-Type" -> "application/json")
     }
   }
 
