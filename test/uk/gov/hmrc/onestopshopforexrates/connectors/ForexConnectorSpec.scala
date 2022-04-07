@@ -67,5 +67,27 @@ class ForexConnectorSpec extends SpecBase with WireMockHelper {
       }
     }
   }
+
+  "getLastRates" - {
+
+    "must return a list of rates when the backend returns" in {
+
+      val numberOfRates = 5
+
+      val url = s"/forex-rates/latest-rates/$numberOfRates/$baseCurrency/$targetCurrency"
+
+      running(application) {
+        val connector = application.injector.instanceOf[ForexConnector]
+
+        val responseBody = Json.toJson(Seq(exchangeRate)).toString
+
+        server.stubFor(get(urlEqualTo(url)).willReturn(ok().withBody(responseBody)))
+
+        val result = connector.getLastRates(numberOfRates, baseCurrency, targetCurrency).futureValue
+
+        result mustEqual Seq(exchangeRate)
+      }
+    }
+  }
 }
 

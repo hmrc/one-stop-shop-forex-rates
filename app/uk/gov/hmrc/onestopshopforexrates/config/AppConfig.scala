@@ -39,5 +39,7 @@ class AppConfig @Inject()
     
   val baseCurrency: String = config.get[String]("baseCurrency")
   val targetCurrency: String = config.get[String]("targetCurrency")
+  val numberOfRates: Int = config.get[Int]("numberOfRates")
+  val getByLatestRates: Boolean = config.get[Boolean]("getByLatestRates")
 
 }

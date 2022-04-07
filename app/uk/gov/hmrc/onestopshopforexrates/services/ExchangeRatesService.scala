@@ -40,6 +40,8 @@ class ExchangeRatesServiceImpl @Inject()(forexConnector: ForexConnector,
   private val dateFrom = dateTo.minusDays(4)
   private val baseCurrency = appConfig.baseCurrency
   private val targetCurrency = appConfig.targetCurrency
+  private val numberOfRates = appConfig.numberOfRates
+  private val getByLatestRates = appConfig.getByLatestRates
   private val timestamp = LocalDateTime.now(clock)
   override val jobName: String = "RetrieveAndSendForexDataJob"
 
@@ -61,7 +63,13 @@ class ExchangeRatesServiceImpl @Inject()(forexConnector: ForexConnector,
   }
 
   def retrieveAndSendToCore(): Future[ExchangeRateResponse] = {
-    val retrievedExchangeRateData = forexConnector.getRates(dateFrom, dateTo, baseCurrency, targetCurrency)
+    val retrievedExchangeRateData = {
+      if(getByLatestRates) {
+        forexConnector.getLastRates(numberOfRates, baseCurrency, targetCurrency)
+      } else {
+        forexConnector.getRates(dateFrom, dateTo, baseCurrency, targetCurrency)
+      }
+    }
     retrievedExchangeRateData.flatMap {
       exchangeRates => if(exchangeRates.isEmpty) {
         logger.warn("There were no rates retrieved")
