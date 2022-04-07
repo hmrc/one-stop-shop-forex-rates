@@ -74,7 +74,7 @@ class ForexConnectorSpec extends SpecBase with WireMockHelper {
 
       val numberOfRates = 5
 
-      val url = s"/forex-rates/rates/latest/$numberOfRates/$baseCurrency/$targetCurrency"
+      val url = s"/forex-rates/latest-rates/$numberOfRates/$baseCurrency/$targetCurrency"
 
       running(application) {
         val connector = application.injector.instanceOf[ForexConnector]
