@@ -19,28 +19,32 @@ package uk.gov.hmrc.onestopshopforexrates.connectors
 import play.api.Logging
 import play.api.http.HeaderNames.AUTHORIZATION
 import play.api.libs.json.Json
+import play.api.mvc.ResponseHeader.httpDateFormat
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import uk.gov.hmrc.onestopshopforexrates.config.IfConfig
 import uk.gov.hmrc.onestopshopforexrates.connectors.ExchangeRateHttpParser._
 import uk.gov.hmrc.onestopshopforexrates.model.core.CoreExchangeRateRequest
 
+import java.time.{Clock, LocalDateTime}
 import java.util.UUID
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class DesConnector @Inject()(
                               httpClient: HttpClient,
-                              ifConfig: IfConfig
+                              ifConfig: IfConfig,
+                              clock: Clock
                             )(implicit ec: ExecutionContext) extends Logging {
 
   private implicit val emptyHc: HeaderCarrier = HeaderCarrier()
-  private[connectors] def headers(correctionId: UUID): Seq[(String, String)] = ifConfig.ifHeaders(correctionId)
+  private[connectors] def headers(correctionId: UUID, date: String): Seq[(String, String)] = ifConfig.ifHeaders(correctionId, date)
 
   private def url = s"${ifConfig.baseUrl}vec/ecbexchangerate/ecbexchangeraterequest/v1"
 
   def postLast5DaysToCore(rates: CoreExchangeRateRequest): Future[ExchangeRateResponse] = {
     val correlationId = UUID.randomUUID()
-    val headersWithCorrelationId = headers(correlationId)
+    val formattedNow = httpDateFormat.format(LocalDateTime.now(clock))
+    val headersWithCorrelationId = headers(correlationId, formattedNow)
 
     val headersWithoutAuth = headersWithCorrelationId.filterNot{
       case (key, _) => key.matches(AUTHORIZATION)
