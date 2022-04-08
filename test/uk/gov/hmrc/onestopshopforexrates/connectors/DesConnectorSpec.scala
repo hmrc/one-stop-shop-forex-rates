@@ -20,6 +20,7 @@ import com.github.tomakehurst.wiremock.client.WireMock._
 import play.api.Application
 import play.api.http.Status.{BAD_REQUEST, CONFLICT}
 import play.api.libs.json.Json
+import play.api.mvc.ResponseHeader.httpDateFormat
 import play.api.test.Helpers.running
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.onestopshopforexrates.base.SpecBase
@@ -56,6 +57,7 @@ class DesConnectorSpec extends SpecBase with WireMockHelper {
   )
 
   private val correlationId = UUID.randomUUID()
+  private val dateNow = httpDateFormat.format(LocalDateTime.now())
 
   "headers" - {
 
@@ -66,29 +68,29 @@ class DesConnectorSpec extends SpecBase with WireMockHelper {
 
       val connector = application.injector.instanceOf[DesConnector]
 
-      connector.headers(correlationId).filter(item => item._1 == "Date").map { item =>
+      connector.headers(correlationId, dateNow).filter(item => item._1 == "Date").map { item =>
         Try(dateFormat.parse(item._2)).isSuccess mustBe true
       }
     }
 
     "generate the correct Correlation ID header required" in {
       val connector = application.injector.instanceOf[DesConnector]
-      connector.headers(correlationId) must contain("X-Correlation-ID" -> correlationId.toString)
+      connector.headers(correlationId, dateNow) must contain("X-Correlation-ID" -> correlationId.toString)
     }
 
     "generate the correct Accept header required" in {
       val connector = application.injector.instanceOf[DesConnector]
-      connector.headers(correlationId) must contain("Accept" -> "application/json")
+      connector.headers(correlationId, dateNow) must contain("Accept" -> "application/json")
     }
 
     "generate the correct X-Forwarded-Host header required" in {
       val connector = application.injector.instanceOf[DesConnector]
-      connector.headers(correlationId) must contain("X-Forwarded-Host" -> "MDTP")
+      connector.headers(correlationId, dateNow) must contain("X-Forwarded-Host" -> "MDTP")
     }
 
     "generate the correct Content-Type header required" in {
       val connector = application.injector.instanceOf[DesConnector]
-      connector.headers(correlationId) must contain("Content-Type" -> "application/json")
+      connector.headers(correlationId, dateNow) must contain("Content-Type" -> "application/json")
     }
   }
 

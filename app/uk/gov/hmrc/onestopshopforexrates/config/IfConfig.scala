@@ -29,9 +29,9 @@ class IfConfig @Inject()(config: Configuration, clock: Clock) {
   val authorizationToken: String = config.get[String]("microservice.services.if.authorizationToken")
   val environment: String = config.get[String]("microservice.services.if.environment")
 
-  def ifHeaders(correlationId: UUID): Seq[(String, String)] = Seq(
+  def ifHeaders(correlationId: UUID, date: String): Seq[(String, String)] = Seq(
     "Authorization" -> s"Bearer $authorizationToken",
-    "Date" -> httpDateFormat.format(LocalDateTime.now(clock)),
+    "Date" -> date,
     "X-Correlation-ID" -> correlationId.toString,
     "Accept" -> "application/json",
     "X-Forwarded-Host" -> "MDTP",
