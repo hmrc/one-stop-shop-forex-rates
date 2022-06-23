@@ -32,7 +32,7 @@ object ExchangeRateHttpParser extends Logging {
     override def read(method: String, url: String, response: HttpResponse): ExchangeRateResponse =
       response.status match {
         case OK =>
-          Right()
+          Right((): Unit)
         case status =>
           if(response.body.isEmpty){
             logger.error(s"Received status code back $status with empty response body")

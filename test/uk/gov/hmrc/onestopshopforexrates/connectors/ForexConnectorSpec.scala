@@ -20,15 +20,12 @@ import com.github.tomakehurst.wiremock.client.WireMock.{get, ok, urlEqualTo}
 import play.api.Application
 import play.api.libs.json.Json
 import play.api.test.Helpers.running
-import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.onestopshopforexrates.base.SpecBase
 import uk.gov.hmrc.onestopshopforexrates.model.ExchangeRate
 
 import java.time.LocalDate
 
 class ForexConnectorSpec extends SpecBase with WireMockHelper {
-
-  implicit private lazy val hc: HeaderCarrier = HeaderCarrier()
 
   private def application: Application =
     applicationBuilder

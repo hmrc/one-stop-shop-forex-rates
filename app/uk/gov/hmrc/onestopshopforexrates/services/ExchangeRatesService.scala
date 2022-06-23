@@ -73,7 +73,7 @@ class ExchangeRatesServiceImpl @Inject()(forexConnector: ForexConnector,
     retrievedExchangeRateData.flatMap {
       exchangeRates => if(exchangeRates.isEmpty) {
         logger.warn("There were no rates retrieved")
-        Future.successful(Right())
+        Future.successful(Right((): Unit))
       } else {
         val exchangeRateRequest = exchangeRateToExchangeRateRequest(exchangeRates)
         retrySendingRates(appConfig.desConnectorMaxAttempts, exchangeRateRequest)

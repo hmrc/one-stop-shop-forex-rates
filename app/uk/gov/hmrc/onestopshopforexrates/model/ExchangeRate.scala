@@ -17,9 +17,8 @@
 package uk.gov.hmrc.onestopshopforexrates.model
 
 import play.api.libs.json.{OFormat, OWrites, Reads, __}
-import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
 
-import java.time.{LocalDate, LocalDateTime}
+import java.time.LocalDate
 
 case class ExchangeRate(date: LocalDate, baseCurrency: String, targetCurrency: String, value: BigDecimal)
 

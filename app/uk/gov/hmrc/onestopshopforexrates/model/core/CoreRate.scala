@@ -17,7 +17,6 @@
 package uk.gov.hmrc.onestopshopforexrates.model.core
 
 import play.api.libs.json.{OFormat, OWrites, Reads, __}
-import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
 
 import java.time.LocalDate
 
