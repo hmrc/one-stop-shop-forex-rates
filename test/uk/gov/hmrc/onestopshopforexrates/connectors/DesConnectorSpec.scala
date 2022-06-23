@@ -22,7 +22,6 @@ import play.api.http.Status.{BAD_REQUEST, CONFLICT}
 import play.api.libs.json.Json
 import play.api.mvc.ResponseHeader.httpDateFormat
 import play.api.test.Helpers.running
-import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.onestopshopforexrates.base.SpecBase
 import uk.gov.hmrc.onestopshopforexrates.model.core.{CoreErrorResponse, CoreExchangeRateRequest, CoreRate}
 
@@ -32,8 +31,6 @@ import java.util.{Locale, UUID}
 import scala.util.Try
 
 class DesConnectorSpec extends SpecBase with WireMockHelper {
-
-  implicit private lazy val hc: HeaderCarrier = HeaderCarrier()
 
   private def application: Application =
     applicationBuilder
@@ -108,7 +105,7 @@ class DesConnectorSpec extends SpecBase with WireMockHelper {
 
         val result = connector.postLast5DaysToCore(exchangeRateRequest).futureValue
 
-        result mustBe Right()
+        result mustBe Right((): Unit)
       }
     }
 

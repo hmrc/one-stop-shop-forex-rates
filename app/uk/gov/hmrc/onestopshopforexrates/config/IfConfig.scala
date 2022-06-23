@@ -17,9 +17,8 @@
 package uk.gov.hmrc.onestopshopforexrates.config
 
 import play.api.Configuration
-import play.api.mvc.ResponseHeader.httpDateFormat
 
-import java.time.{Clock, LocalDateTime, ZonedDateTime}
+import java.time.Clock
 import java.util.UUID
 import javax.inject.Inject
 

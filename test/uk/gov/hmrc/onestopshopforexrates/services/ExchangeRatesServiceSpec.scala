@@ -4,7 +4,6 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito
 import org.mockito.Mockito.{times, verify, verifyNoInteractions, when}
 import org.scalatest.BeforeAndAfterEach
-import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.onestopshopforexrates.base.SpecBase
 import uk.gov.hmrc.onestopshopforexrates.config.AppConfig
 import uk.gov.hmrc.onestopshopforexrates.connectors.{DesConnector, ForexConnector}
@@ -21,8 +20,6 @@ class ExchangeRatesServiceSpec extends SpecBase with BeforeAndAfterEach {
   private val mockForexConnector = mock[ForexConnector]
   private val mockDesConnector = mock[DesConnector]
   private val mockAppConfig = mock[AppConfig]
-
-  implicit private lazy val hc: HeaderCarrier = HeaderCarrier()
 
   private val date = LocalDate.now(stubClock)
   private val baseCurrency = "EUR"
@@ -47,11 +44,11 @@ class ExchangeRatesServiceSpec extends SpecBase with BeforeAndAfterEach {
     "must retrieve exchange rate data from Forex Rates and send to Core" in {
       when(mockAppConfig.desConnectorMaxAttempts) thenReturn maxAttempts
       when(mockForexConnector.getRates(any(), any(), any(), any())) thenReturn Future.successful(Seq(exchangeRate))
-      when(mockDesConnector.postLast5DaysToCore(any())) thenReturn Future.successful(Right())
+      when(mockDesConnector.postLast5DaysToCore(any())) thenReturn Future.successful(Right((): Unit))
 
       val result = exchangeRateService.retrieveAndSendToCore().futureValue
 
-      result mustBe Right()
+      result mustBe Right((): Unit)
 
       verify(mockForexConnector, times(1)).getRates(any[LocalDate], any[LocalDate], any[String], any[String])
       verify(mockDesConnector, times(1)).postLast5DaysToCore(any[CoreExchangeRateRequest])
@@ -63,7 +60,7 @@ class ExchangeRatesServiceSpec extends SpecBase with BeforeAndAfterEach {
 
       val result = exchangeRateService.retrieveAndSendToCore().futureValue
 
-      result mustBe Right()
+      result mustBe Right((): Unit)
 
       verify(mockForexConnector, times(1)).getRates(any[LocalDate], any[LocalDate], any[String], any[String])
       verifyNoInteractions(mockDesConnector)
@@ -93,11 +90,11 @@ class ExchangeRatesServiceSpec extends SpecBase with BeforeAndAfterEach {
 
     "must retrieve exchange rate data from Forex Rates and send to Core" in {
       when(mockForexConnector.getLastRates(any(), any(), any())) thenReturn Future.successful(Seq(exchangeRate))
-      when(mockDesConnector.postLast5DaysToCore(any())) thenReturn Future.successful(Right())
+      when(mockDesConnector.postLast5DaysToCore(any())) thenReturn Future.successful(Right((): Unit))
 
       val result = exchangeRateService.retrieveAndSendToCore().futureValue
 
-      result mustBe Right()
+      result mustBe Right((): Unit)
 
       verify(mockForexConnector, times(1)).getLastRates(any[Int], any[String], any[String])
       verify(mockDesConnector, times(1)).postLast5DaysToCore(any[CoreExchangeRateRequest])

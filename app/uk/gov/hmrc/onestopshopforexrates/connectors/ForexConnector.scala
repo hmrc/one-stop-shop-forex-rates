@@ -24,6 +24,7 @@ import uk.gov.hmrc.onestopshopforexrates.model.ExchangeRate
 import java.time.LocalDate
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
+import uk.gov.hmrc.http.HttpReads.Implicits._
 
 class ForexConnector @Inject()(
                                 httpClient: HttpClient,
