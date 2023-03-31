@@ -26,7 +26,7 @@ import java.time.{Clock, ZoneOffset}
 class ModuleBindings extends Module {
 
   override def bindings(environment: Environment, configuration: Configuration): Seq[Binding[_]] = Seq(
-    play.inject.Module.bindClass(classOf[Clock]).toInstance(Clock.systemDefaultZone.withZone(ZoneOffset.UTC)).asScala(),
+    play.inject.Module.bindClass(classOf[Clock]).toInstance(Clock.systemDefaultZone.withZone(ZoneOffset.UTC)).eagerly().asScala(),
     bind[ExchangeRatesService].to[ExchangeRatesServiceImpl],
     bind[RetrieveAndSendForexDataJob].to[RetrieveAndSendForexDataJobImpl].eagerly()
   )
