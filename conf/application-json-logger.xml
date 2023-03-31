@@ -5,7 +5,7 @@
         <encoder class="uk.gov.hmrc.play.logging.JsonEncoder"/>
     </appender>
 
-    <logger name="application.uk.gov.hmrc.onestopshopforexrates.services.ExchangeRatesServiceImpl" level="${logger.uk.gov.hmrc.onestopshopforexrates.services.ExchangeRatesServiceImpl:-INFO}"/>
+    <logger name="application.uk.gov.hmrc.onestopshopforexrates.services.ExchangeRatesServiceImpl" level="INFO"/>
 
     <root level="WARN">
         <appender-ref ref="STDOUT"/>
