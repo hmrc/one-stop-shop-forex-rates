@@ -116,7 +116,7 @@ class DesConnectorSpec extends SpecBase with WireMockHelper {
         server.stubFor(post(urlEqualTo(url)).willReturn(badRequest()))
 
         val result = connector.postLast5DaysToCore(exchangeRateRequest).futureValue
-        val expectedResponse = CoreErrorResponse(result.left.get.timestamp, None, s"UNEXPECTED_$BAD_REQUEST", "Response body was empty")
+        val expectedResponse = CoreErrorResponse(result.left.toOption.get.timestamp, None, s"UNEXPECTED_$BAD_REQUEST", "Response body was empty")
 
         result mustBe Left(expectedResponse)
       }
@@ -158,7 +158,7 @@ class DesConnectorSpec extends SpecBase with WireMockHelper {
 
         val result = connector.postLast5DaysToCore(exchangeRateRequest).futureValue
 
-        val expectedResponse = CoreErrorResponse(result.left.get.timestamp, result.left.get.transactionId, s"UNEXPECTED_409", errorResponseJson)
+        val expectedResponse = CoreErrorResponse(result.left.toOption.get.timestamp, result.left.toOption.get.transactionId, s"UNEXPECTED_409", errorResponseJson)
 
         result mustBe Left(expectedResponse)
       }
