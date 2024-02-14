@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.onestopshopforexrates.scheduler
 
-import akka.actor.{Actor, ActorLogging, Props}
+import org.apache.pekko.actor.{Actor, ActorLogging, Props}
 import uk.gov.hmrc.onestopshopforexrates.scheduler.SchedulingActor.ScheduledMessage
 import uk.gov.hmrc.onestopshopforexrates.services.ExchangeRatesService
 

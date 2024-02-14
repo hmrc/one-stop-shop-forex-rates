@@ -17,7 +17,7 @@
 package uk.gov.hmrc.onestopshopforexrates.scheduler.jobs
 
 
-import akka.actor.ActorSystem
+import org.apache.pekko.actor.ActorSystem
 import play.api.Configuration
 import play.api.inject.ApplicationLifecycle
 import uk.gov.hmrc.onestopshopforexrates.scheduler.ScheduledJob

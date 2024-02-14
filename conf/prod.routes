@@ -2,4 +2,3 @@
 ->         /one-stop-shop-forex-rates              app.Routes
 ->         /                          health.Routes
 
-GET        /admin/metrics             com.kenshoo.play.metrics.MetricsController.metrics

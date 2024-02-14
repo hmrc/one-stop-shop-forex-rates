@@ -16,8 +16,8 @@
 
 package uk.gov.hmrc.onestopshopforexrates.scheduler
 
-import akka.actor.{ActorRef, ActorSystem}
-import com.typesafe.akka.extension.quartz.QuartzSchedulerExtension
+import org.apache.pekko.actor.{ActorRef, ActorSystem}
+import org.apache.pekko.extension.quartz.QuartzSchedulerExtension
 import play.api.Configuration
 import play.api.inject.ApplicationLifecycle
 import play.api.Logging
@@ -36,7 +36,7 @@ trait ScheduledJob extends Logging {
 
   val applicationLifecycle: ApplicationLifecycle
 
-  lazy val scheduler: QuartzSchedulerExtension = QuartzSchedulerExtension(actorSystem)
+  lazy val scheduler = QuartzSchedulerExtension(actorSystem)
 
   lazy val schedulingActorRef: ActorRef = actorSystem.actorOf(SchedulingActor.props)
 
