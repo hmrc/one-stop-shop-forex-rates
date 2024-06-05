@@ -17,17 +17,18 @@
 package uk.gov.hmrc.onestopshopforexrates.connectors
 
 import play.api.{Configuration, Logging}
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import uk.gov.hmrc.http.HttpReads.Implicits._
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.{HeaderCarrier, StringContextOps}
 import uk.gov.hmrc.onestopshopforexrates.config.Service
 import uk.gov.hmrc.onestopshopforexrates.model.ExchangeRate
 
 import java.time.LocalDate
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
-import uk.gov.hmrc.http.HttpReads.Implicits._
 
 class ForexConnector @Inject()(
-                                httpClient: HttpClient,
+                                httpClientV2: HttpClientV2,
                                 config: Configuration
                               )(implicit ec: ExecutionContext) extends Logging {
 
@@ -35,11 +36,11 @@ class ForexConnector @Inject()(
 
   def getRates(dateFrom: LocalDate, dateTo: LocalDate, baseCurrency: String, targetCurrency: String): Future[Seq[ExchangeRate]] = {
     implicit val hc: HeaderCarrier = HeaderCarrier()
-    httpClient.GET[Seq[ExchangeRate]](s"${baseUrl}rates/$dateFrom/$dateTo/$baseCurrency/$targetCurrency")
+    httpClientV2.get(url"${baseUrl}rates/$dateFrom/$dateTo/$baseCurrency/$targetCurrency").execute[Seq[ExchangeRate]]
   }
 
   def getLastRates(numberOfRates: Int, baseCurrency: String, targetCurrency: String): Future[Seq[ExchangeRate]] = {
     implicit val hc: HeaderCarrier = HeaderCarrier()
-    httpClient.GET[Seq[ExchangeRate]](s"${baseUrl}latest-rates/$numberOfRates/$baseCurrency/$targetCurrency")
+    httpClientV2.get(url"${baseUrl}latest-rates/$numberOfRates/$baseCurrency/$targetCurrency").execute[Seq[ExchangeRate]]
   }
 }
