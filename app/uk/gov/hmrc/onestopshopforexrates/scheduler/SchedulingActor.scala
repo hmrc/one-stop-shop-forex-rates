@@ -20,9 +20,10 @@ import org.apache.pekko.actor.{Actor, ActorLogging, Props}
 import uk.gov.hmrc.onestopshopforexrates.scheduler.SchedulingActor.ScheduledMessage
 import uk.gov.hmrc.onestopshopforexrates.services.ExchangeRatesService
 
-import scala.concurrent.ExecutionContext
 
-class SchedulingActor(implicit ec: ExecutionContext) extends Actor with ActorLogging {
+
+class SchedulingActor extends Actor with ActorLogging {
+
 
   override def receive: Receive = {
     case message: ScheduledMessage[_] => message.service.invoke
