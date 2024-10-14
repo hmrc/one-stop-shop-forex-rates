@@ -45,7 +45,7 @@ class ExchangeRatesServiceImpl @Inject()(forexConnector: ForexConnector,
   private val timestamp = LocalDateTime.now(clock)
   override val jobName: String = "RetrieveAndSendForexDataJob"
 
-  override def invoke(implicit ec: ExecutionContext): Future[Boolean] = {
+  override def invoke: Future[Boolean] = {
     logger.info(s"[$jobName Scheduled Job Started]")
 
     retrieveAndSendToCore().map {
