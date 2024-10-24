@@ -20,9 +20,10 @@ import org.apache.pekko.actor.{Actor, ActorLogging, Props}
 import uk.gov.hmrc.onestopshopforexrates.scheduler.SchedulingActor.ScheduledMessage
 import uk.gov.hmrc.onestopshopforexrates.services.ExchangeRatesService
 
-import scala.concurrent.ExecutionContext.Implicits.global
+
 
 class SchedulingActor extends Actor with ActorLogging {
+
 
   override def receive: Receive = {
     case message: ScheduledMessage[_] => message.service.invoke
@@ -35,7 +36,7 @@ object SchedulingActor {
     val service: ScheduledService[A]
   }
 
-  def props: Props = Props[SchedulingActor]
+  def props: Props = Props[SchedulingActor]()
 
   case class RetrieveAndSendExchangeRatesClass(service: ExchangeRatesService) extends ScheduledMessage[Boolean]
 
