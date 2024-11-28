@@ -9,25 +9,23 @@ Requirements
 
 This service is written in [Scala](http://www.scala-lang.org/) and [Play](http://playframework.com/), so needs at least a [JRE] to run.
 
-## Run the application
+## Run the application locally via Service Manager
 
-To update from Nexus and start all services from the RELEASE version instead of snapshot
 ```
-sm --start ONE_STOP_SHOP_ALL -r
+sm2 --start ONE_STOP_SHOP_ALL -r
 ```
 
-### To run the application locally execute the following:
+### To run the application locally from the repository, execute the following:
 ```
-sm --stop ONE_STOP_SHOP_FOREX_RATES
+sm2 --stop ONE_STOP_SHOP_FOREX_RATES
 ```
 and 
 ```
-sbt 'run 10199'
+sbt run -Dapplication.router=testOnlyDoNotUseInAppConf.Routes
 ```
 
-### To use the test-only endpoints:
+### To use the test-only endpoint:
 ```
-sbt run -Dapplication.router=testOnlyDoNotUseInAppConf.Routes
 ```
 The test-only endpoint triggers the retrieval of exchange rates from forex-rates API and posting them to Core.
 
