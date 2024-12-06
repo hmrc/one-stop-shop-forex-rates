@@ -25,6 +25,8 @@ import uk.gov.hmrc.http.{HeaderCarrier, StringContextOps}
 import uk.gov.hmrc.onestopshopforexrates.config.IfConfig
 import uk.gov.hmrc.onestopshopforexrates.connectors.ExchangeRateHttpParser._
 import uk.gov.hmrc.onestopshopforexrates.model.core.CoreExchangeRateRequest
+import play.api.libs.ws.JsonBodyWritables.writeableOf_JsValue
+
 
 import java.net.URL
 import java.time.{Clock, LocalDateTime}
