@@ -7,11 +7,11 @@ lazy val microservice = Project(appName, file("."))
   .enablePlugins(play.sbt.PlayScala, SbtDistributablesPlugin)
   .settings(
     majorVersion                     := 0,
-    scalaVersion                     := "2.13.14",
+    scalaVersion                     := "3.3.4",
     libraryDependencies              ++= AppDependencies.compile ++ AppDependencies.test,
 
-    ScoverageKeys.coverageExcludedFiles := "<empty>;Reverse.*;" +
-      ".*Routes.*;" + ".*AppConfig.*;",
+    ScoverageKeys.coverageExcludedFiles := "<empty>,Reverse.*," +
+      ".*Routes.*," + ".*AppConfig.*,",
     ScoverageKeys.coverageMinimumStmtTotal := 78,
     ScoverageKeys.coverageFailOnMinimum := true,
     ScoverageKeys.coverageHighlighting := true
@@ -23,6 +23,7 @@ lazy val microservice = Project(appName, file("."))
   .settings(resolvers += Resolver.jcenterRepo)
   .settings(PlayKeys.playDefaultPort := 10199)
   .settings(scalacOptions+="-Wconf:src=routes/.*:s")
+  .settings(scalacOptions+= "-Wconf:msg=Flag.*repeatedly:s")
 
 
 lazy val itSettings = Defaults.itSettings ++ Seq(

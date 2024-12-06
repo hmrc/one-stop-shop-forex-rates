@@ -24,14 +24,14 @@ case class CoreRate(publishedDate: LocalDate, rate: BigDecimal)
 
 object CoreRate {
 
-   val reads: Reads[CoreRate] = {
+  val reads: Reads[CoreRate] = {
 
     import play.api.libs.functional.syntax._
 
     (
       (__ \ "publishedDate").read[LocalDate] and
         (__ \ "rate").read[BigDecimal]
-      ) (CoreRate.apply _)
+      )(CoreRate.apply _)
   }
 
   val writes: OWrites[CoreRate] = {
@@ -41,7 +41,7 @@ object CoreRate {
     (
       (__ \ "publishedDate").write[LocalDate] and
         (__ \ "rate").write[BigDecimal]
-      ) (unlift(CoreRate.unapply))
+      )(coreRate => Tuple.fromProductTyped(coreRate))
   }
 
   implicit val format: OFormat[CoreRate] = OFormat(reads, writes)

@@ -45,7 +45,7 @@ object ExchangeRate {
         (__ \ "baseCurrency").write[String] and
         (__ \ "targetCurrency").write[String] and
         (__ \ "value").write[BigDecimal]
-      ) (unlift(ExchangeRate.unapply))
+      ) (exchangeRate => Tuple.fromProductTyped(exchangeRate))
   }
 
   implicit val format: OFormat[ExchangeRate] = OFormat(reads, writes)
