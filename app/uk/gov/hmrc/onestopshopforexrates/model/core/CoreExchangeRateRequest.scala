@@ -51,7 +51,7 @@ object CoreExchangeRateRequest {
         (__ \ "target").read[String] and
         (__ \ "timestamp").read[LocalDateTime](dateTimeReadsWithMilliseconds) and
         (__ \ "rates").read[Seq[CoreRate]]
-      ) (CoreExchangeRateRequest.apply _)
+      ) (CoreExchangeRateRequest.apply)
   }
 
   val writes: OWrites[CoreExchangeRateRequest] = {
@@ -63,7 +63,7 @@ object CoreExchangeRateRequest {
         (__ \ "target").write[String] and
         (__ \ "timestamp").write[LocalDateTime](dateTimeWritesWithMilliseconds) and
         (__ \ "rates").write[Seq[CoreRate]]
-      ) (unlift(CoreExchangeRateRequest.unapply))
+      ) (coreExchangeRateRequest => Tuple.fromProductTyped(coreExchangeRateRequest))
   }
 
   implicit val format: OFormat[CoreExchangeRateRequest] = OFormat(reads, writes)
