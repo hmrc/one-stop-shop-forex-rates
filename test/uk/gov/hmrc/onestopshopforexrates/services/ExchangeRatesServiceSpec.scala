@@ -9,13 +9,15 @@ import uk.gov.hmrc.onestopshopforexrates.config.AppConfig
 import uk.gov.hmrc.onestopshopforexrates.connectors.{DesConnector, ForexConnector}
 import uk.gov.hmrc.onestopshopforexrates.model.ExchangeRate
 import uk.gov.hmrc.onestopshopforexrates.model.core.{CoreErrorResponse, CoreExchangeRateRequest, CoreRate}
+import org.scalatest.PrivateMethodTester
+import uk.gov.hmrc.onestopshopforexrates.connectors.ExchangeRateHttpParser.ExchangeRateResponse
 
 import java.time.{Clock, Instant, LocalDate, LocalDateTime, ZoneId}
 import java.util.UUID
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class ExchangeRatesServiceSpec extends SpecBase with BeforeAndAfterEach {
+class ExchangeRatesServiceSpec extends SpecBase with BeforeAndAfterEach with PrivateMethodTester {
 
   private val mockForexConnector = mock[ForexConnector]
   private val mockDesConnector = mock[DesConnector]
@@ -191,8 +193,9 @@ class ExchangeRatesServiceSpec extends SpecBase with BeforeAndAfterEach {
         timestamp = LocalDateTime.now,
         rates = Seq(CoreRate(LocalDate.now(), rate))
       )
+      val retrySendingRates = PrivateMethod[Future[ExchangeRateResponse]](Symbol("retrySendingRates"))
 
-      val result = exchangeRateService.retrySendingRates(3, exchangeRateRequest).futureValue
+      val result = exchangeRateService.invokePrivate(retrySendingRates(3, exchangeRateRequest)).futureValue
 
       result mustBe Left(expectedResponse)
 
@@ -216,8 +219,9 @@ class ExchangeRatesServiceSpec extends SpecBase with BeforeAndAfterEach {
         timestamp = LocalDateTime.now(stubClock),
         rates = Seq(CoreRate(LocalDate.now(), rate))
       )
+      val retrySendingRates = PrivateMethod[Future[ExchangeRateResponse]](Symbol("retrySendingRates"))
 
-      val futureResult = exchangeRateService.retrySendingRates(3, exchangeRateRequest).failed
+      val futureResult = exchangeRateService.invokePrivate(retrySendingRates(3, exchangeRateRequest)).failed
 
       whenReady(futureResult) { exception =>
         exception mustBe a[RuntimeException]

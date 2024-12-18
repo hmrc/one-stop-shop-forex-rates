@@ -89,7 +89,7 @@ class ExchangeRatesServiceImpl @Inject()(forexConnector: ForexConnector,
     CoreExchangeRateRequest(baseCurrency, targetCurrency, timestamp, coreRates)
   }
 
-  def retrySendingRates(count: Int, coreRequest: CoreExchangeRateRequest): Future[ExchangeRateResponse] = {
+  private def retrySendingRates(count: Int, coreRequest: CoreExchangeRateRequest): Future[ExchangeRateResponse] = {
     desConnector.postLast5DaysToCore(coreRequest).flatMap {
       case response@Right(_) =>
         Future.successful(response)
