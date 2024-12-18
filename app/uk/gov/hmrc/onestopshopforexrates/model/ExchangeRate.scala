@@ -33,7 +33,7 @@ object ExchangeRate {
         (__ \ "baseCurrency").read[String] and
         (__ \ "targetCurrency").read[String] and
         (__ \ "value").read[BigDecimal]
-      ) (ExchangeRate.apply _)
+      ) (ExchangeRate.apply)
   }
 
   val writes: OWrites[ExchangeRate] = {

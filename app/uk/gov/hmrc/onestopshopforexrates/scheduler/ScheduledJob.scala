@@ -29,7 +29,7 @@ import scala.concurrent.Future
 
 trait ScheduledJob extends Logging {
 
-  val scheduledMessage: ScheduledMessage[_]
+  val scheduledMessage: ScheduledMessage[?]
   val config: Configuration
   val actorSystem: ActorSystem
   val jobName: String

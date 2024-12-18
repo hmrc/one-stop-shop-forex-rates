@@ -57,7 +57,7 @@ class DesConnector @Inject()(
 
     logger.info(s"Sending exchange rate request to core with headers $headersWithoutAuth with body [${Json.toJson(rates)}]")
 
-    httpClientV2.post(url).withBody(Json.toJson(rates)).setHeader(headersWithCorrelationId: _*).execute[ExchangeRateResponse]
+    httpClientV2.post(url).withBody(Json.toJson(rates)).setHeader(headersWithCorrelationId*).execute[ExchangeRateResponse]
   }
 
 }

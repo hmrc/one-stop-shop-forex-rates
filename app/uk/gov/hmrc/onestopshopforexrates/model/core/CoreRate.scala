@@ -31,7 +31,7 @@ object CoreRate {
     (
       (__ \ "publishedDate").read[LocalDate] and
         (__ \ "rate").read[BigDecimal]
-      )(CoreRate.apply _)
+      )(CoreRate.apply)
   }
 
   val writes: OWrites[CoreRate] = {

@@ -51,7 +51,7 @@ object CoreExchangeRateRequest {
         (__ \ "target").read[String] and
         (__ \ "timestamp").read[LocalDateTime](dateTimeReadsWithMilliseconds) and
         (__ \ "rates").read[Seq[CoreRate]]
-      ) (CoreExchangeRateRequest.apply _)
+      ) (CoreExchangeRateRequest.apply)
   }
 
   val writes: OWrites[CoreExchangeRateRequest] = {

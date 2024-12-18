@@ -17,13 +17,13 @@ lazy val microservice = Project(appName, file("."))
     ScoverageKeys.coverageHighlighting := true
   )
   .configs(IntegrationTest)
-  .settings(inConfig(IntegrationTest)(itSettings): _*)
+  .settings(inConfig(IntegrationTest)(itSettings)*)
   .configs(Test)
-  .settings(inConfig(Test)(testSettings): _*)
+  .settings(inConfig(Test)(testSettings)*)
   .settings(resolvers += Resolver.jcenterRepo)
   .settings(PlayKeys.playDefaultPort := 10199)
-  .settings(scalacOptions+="-Wconf:src=routes/.*:s")
-  .settings(scalacOptions+= "-Wconf:msg=Flag.*repeatedly:s")
+  .settings(scalacOptions ++= Seq("-Wconf:src=routes/.*:s", "-Wconf:msg=Flag.*repeatedly:s")
+  )
 
 
 lazy val itSettings = Defaults.itSettings ++ Seq(
