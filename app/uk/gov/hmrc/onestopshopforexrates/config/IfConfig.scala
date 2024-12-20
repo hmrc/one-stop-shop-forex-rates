@@ -18,11 +18,10 @@ package uk.gov.hmrc.onestopshopforexrates.config
 
 import play.api.Configuration
 
-import java.time.Clock
 import java.util.UUID
 import javax.inject.Inject
 
-class IfConfig @Inject()(config: Configuration, clock: Clock) {
+class IfConfig @Inject()(config: Configuration) {
 
   val baseUrl: Service = config.get[Service]("microservice.services.if")
   val authorizationToken: String = config.get[String]("microservice.services.if.authorizationToken")
