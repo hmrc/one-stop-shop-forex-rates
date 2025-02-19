@@ -4,12 +4,12 @@ import sbt.*
 object AppDependencies {
 
   val compile = Seq(
-    "uk.gov.hmrc"             %% "bootstrap-backend-play-30"  % "9.5.0",
+    "uk.gov.hmrc"             %% "bootstrap-backend-play-30"  % "9.9.0",
     "io.github.samueleresca"  %% "pekko-quartz-scheduler"     % "1.2.0-pekko-1.0.x"
   )
 
   val test = Seq(
-    "uk.gov.hmrc"             %% "bootstrap-test-play-30"     % "9.5.0",
+    "uk.gov.hmrc"             %% "bootstrap-test-play-30"     % "9.9.0",
     "com.vladsch.flexmark"    %  "flexmark-all"               % "0.64.8",
     "org.scalatest"           %% "scalatest"                  % "3.2.19",
     "org.playframework"       %% "play-test"                  % PlayVersion.current,
