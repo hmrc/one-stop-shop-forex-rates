@@ -23,13 +23,13 @@ import play.api.mvc.ResponseHeader.httpDateFormat
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.{HeaderCarrier, StringContextOps}
 import uk.gov.hmrc.onestopshopforexrates.config.IfConfig
-import uk.gov.hmrc.onestopshopforexrates.connectors.ExchangeRateHttpParser._
+import uk.gov.hmrc.onestopshopforexrates.connectors.ExchangeRateHttpParser.*
 import uk.gov.hmrc.onestopshopforexrates.model.core.CoreExchangeRateRequest
 import play.api.libs.ws.JsonBodyWritables.writeableOf_JsValue
 
-
 import java.net.URL
-import java.time.{Clock, LocalDateTime}
+import java.time.{Clock, LocalDateTime, ZoneOffset}
+import java.time.format.DateTimeFormatter
 import java.util.UUID
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
@@ -48,7 +48,7 @@ class DesConnector @Inject()(
 
   def postLast5DaysToCore(rates: CoreExchangeRateRequest): Future[ExchangeRateResponse] = {
     val correlationId = UUID.randomUUID
-    val formattedNow = httpDateFormat.format(LocalDateTime.now(clock))
+    val formattedNow = DateTimeFormatter.RFC_1123_DATE_TIME.format(LocalDateTime.now(clock).atOffset(ZoneOffset.UTC))
     val headersWithCorrelationId = headers(correlationId, formattedNow)
 
     val headersWithoutAuth = headersWithCorrelationId.filterNot {
